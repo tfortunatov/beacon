@@ -11,16 +11,13 @@ Second, you'll report on that output using software.
 
 #Prerequisites#
 
-Your answer will be written in python and shell, and must meet the
+Your answer will be written in python, and must meet the
 following requirements:
 
  * The python component should run on python v3.2.3+, unless you import
    a public module that requires v2.7.x. If you do so, you'll be expected
    to justify that decision. Python programs that rely on pre-2.7 syntax
    will not be accepted.
-
- * The shell component should run in shell (aka `dash`; aka a shebang
-   line of `#!/bin/sh`) or bash (aka a shebang line of `#!/bin/bash`).
 
  * It must run on Ubuntu 12.04 (aka "precise"), and shouldn't require
    any unusual binaries or new software to run.
@@ -109,10 +106,6 @@ That script should have the following characteristics:
 the python standard library. Part of engineering is knowing when to
 include 3rd party modules. In particular, if you know a good alternative
 to `urllib` or `xml.etree`, feel free to include it.
-
-##Goal 2: Exploring the Results##
-
-*Coming Soon*
 
 #Submitting Answers#
 
