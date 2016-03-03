@@ -38,8 +38,8 @@ going to analyze it.
 ##Goal 1: Sampling Chaos##
 
 The Randomness Beacon publishes a [RESTful
-API](https://beacon.nist.gov/home), through which you can retrive any
-given minute's beacon value as 128 hexidecimal characters, as well as a
+API](https://beacon.nist.gov/home), through which you can retrieve any
+given minute's beacon value as 128 hexadecimal characters, as well as a
 variety of other authentication data. Your first goal is to summarize
 the beacon's emissions over arbitrary amounts of time.
 
@@ -80,7 +80,7 @@ That script should have the following characteristics:
         $ summarize-beacon --from "3 months 1 day 1 hour ago" --to "1 month 1 hour ago"
 
    the script should parse the strings "3 months 1 day 1 hour ago" and "1
-   month 1 hour ago" into a time format the becaon's API can understand,
+   month 1 hour ago" into a time format the beacon's API can understand,
    and print the summed character count of all beacon values between those
    two times. The script should understand "month(s)," "day(s)", "hour(s)",
    and "minutes(s)", and should handle any combination of those values.
