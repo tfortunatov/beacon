@@ -1,1 +1,82 @@
 # Placeholder for your script.
+#!/usr/local/bin/groovy
+import java.text.*
+def addr = 'https://beacon.nist.gov/rest/record/last'
+
+def cli = new CliBuilder(
+        usage: 'beacon.groovy -f FromDate -t ToDate'
+)
+import org.apache.commons.cli.Option
+cli.with
+        {
+            h(longOpt: 'help', 'Usage Information', required: false)
+            f(longOpt: 'from', 'From date', args: 1, required: false)
+            t(longOpt: 'to', 'To date', args: 1, required: false)
+        }
+def opt = cli.parse(args)
+
+if (opt.h) cli.usage()
+
+if (opt.f && opt.t) {
+    def connTs = addr.toURL().openConnection();
+    def feedTs = new XmlSlurper().parseText(connTs.content.text);
+    def currentTimestamp = feedTs['timeStamp'];
+    int currentTimestampInteger = "$currentTimestamp".toInteger()
+
+    def fromDate = opt.f.findAll( /\d+/ )*.toInteger()
+    int timestampFrom = fromDate[0] * 2629743 + fromDate[1] * 86400 + fromDate[2] * 3600
+    int resultFrom = currentTimestampInteger - timestampFrom
+
+    def toDate = opt.t.findAll( /\d+/ )*.toInteger()
+    int timestampTo = toDate[0] * 2629743 + toDate[1] * 86400 + toDate[2] * 3600
+    int resultTo = currentTimestampInteger - timestampTo
+    if (resultFrom < 1378395540 || resultTo < 1378395540) {
+        println "Please ensure that dates start after UNIX epoch, exiting"
+        System.exit(0)
+    }
+
+    def addrFrom = "https://beacon.nist.gov/rest/record/${resultFrom}"
+    def addrTo = "https://beacon.nist.gov/rest/record/${resultTo}"
+
+    def connTo = addrTo.toURL().openConnection();
+    def connFrom = addrFrom.toURL().openConnection();
+    def feedTo = new XmlSlurper().parseText(connTo.content.text);
+    def feedFrom = new XmlSlurper().parseText(connFrom.content.text);
+    strFrom = feedFrom['outputValue']
+    strTo = feedTo['outputValue'];
+
+    str = "${strFrom}" + "${strTo}"
+    int len = str.length();
+    Map<Character, Integer> numChars = new HashMap<Character, Integer>(Math.min(len, 26));
+    for (int i = 0; i < len; ++i) {
+        char charAt = str.charAt(i);
+        if (!numChars.containsKey(charAt)) {
+            numChars.put(charAt, 1);
+        } else {
+            numChars.put(charAt, numChars.get(charAt) + 1);
+        }
+    }
+
+    numChars.each {
+        println "${it} ".replace('=', ',')
+    }
+} else {
+
+    def conn = addr.toURL().openConnection();
+    def feed = new XmlSlurper().parseText(conn.content.text);
+    String str = feed['outputValue'];
+    int len = str.length();
+    Map<Character, Integer> numChars = new HashMap<Character, Integer>(Math.min(len, 26));
+    for (int i = 0; i < len; ++i) {
+        char charAt = str.charAt(i);
+        if (!numChars.containsKey(charAt)) {
+            numChars.put(charAt, 1);
+        } else {
+            numChars.put(charAt, numChars.get(charAt) + 1);
+        }
+    }
+
+    numChars.each {
+        println "${it} ".replace('=', ',')
+    }
+}
